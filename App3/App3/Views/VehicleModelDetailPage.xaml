@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="App3.Views.VehicleModelDetailPage"
+             xmlns:local="clr-namespace:App3.ViewModels"
+             Title="{Binding Title}"
+             BackgroundColor="AliceBlue"
+             x:DataType="local:VehicleModelDetailViewModel"
+             xmlns:model="clr-namespace:App3.Models">
+    <ContentPage.ToolbarItems Order="Secondary">
+        <ToolbarItem Text="Update Vehicle Model" Command="{Binding UpdateVehicleModelCommand}" Order="Secondary"  />
+        <ToolbarItem Text="Delete Vehicle Model" Command="{Binding DeleteVehicleModelCommand}" Order="Secondary"  />
+    </ContentPage.ToolbarItems>
+    <StackLayout Spacing="20" Padding="15">
+        <Label Text="Name:" FontSize="Medium" />
+        <Entry Text="{Binding VehicleModelName}" FontSize="Small"/>
+        <Label Text="Abbreviation:" FontSize="Medium" />
+        <Entry Text="{Binding VehicleModelAbrv}" FontSize="Small"/>
+    </StackLayout>
+</ContentPage>

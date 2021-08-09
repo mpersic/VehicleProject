@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="App3.Views.VehicleMakeDetailPage"
+             Title="{Binding Title}"
+             BackgroundColor="AliceBlue"
+             xmlns:local="clr-namespace:App3.ViewModels"  
+             xmlns:model="clr-namespace:App3.Models"  >
+    <ContentPage.ToolbarItems Order="Secondary">
+        <ToolbarItem Text="Add New Vehicle" Command="{Binding AddVehicleModelCommand}" Order="Secondary"/>
+        <ToolbarItem Text="Update Manufacturer" Command="{Binding UpdateVehicleMakeCommand}" Order="Secondary"  />
+        <ToolbarItem Text="Delete Manufacturer" Command="{Binding DeleteVehicleMakeCommand}" Order="Secondary"  />
+    </ContentPage.ToolbarItems>
+    <StackLayout Spacing="20" Padding="15">
+        <Label Text="Name:" FontSize="Medium" />
+        <Entry Text="{Binding VehicleMakeName}" FontSize="Small"/>
+        <Label Text="Abbreviation:" FontSize="Medium" />
+        <Entry Text="{Binding VehicleMakeAbrv}" FontSize="Small"/>
+        <Label Text="Vehicles:" FontSize="Medium" />
+        <RefreshView x:DataType="local:VehicleMakeDetailViewModel" Command="{Binding LoadVehicleModelsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+            <CollectionView x:Name="VehicleModels"
+                ItemsSource="{Binding VehicleModels}"
+                SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout Padding="10" x:DataType="model:VehicleModel"
+                                     BackgroundColor="Beige">
+                            <Frame OutlineColor="Black">
+                                <Label Text="{Binding Name}" 
+                                        LineBreakMode="NoWrap" 
+                                        Style="{DynamicResource ListItemTextStyle}" 
+                                        FontSize="16" />
+                            </Frame>
+                            <StackLayout.GestureRecognizers>
+                                <TapGestureRecognizer 
+                                NumberOfTapsRequired="1"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:VehicleMakeDetailViewModel}}, Path=VehicleModelTapped}"		
+                                CommandParameter="{Binding .}">
+                                </TapGestureRecognizer>
+                            </StackLayout.GestureRecognizers>
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </StackLayout>
+    
+</ContentPage>
