@@ -121,6 +121,7 @@ namespace App3.ViewModels
                         await BaseVehicleModelDataStore.UpdateItemAsync(new VehicleModel { Id = item.Id, Name = item.Name, Abrv = item.Abrv, MakeId = item.MakeId });
                     }
                 }
+                await Shell.Current.GoToAsync("..");
             }
             catch (Exception ex)
             {

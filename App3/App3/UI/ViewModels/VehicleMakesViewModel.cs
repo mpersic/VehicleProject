@@ -1,9 +1,14 @@
 ﻿using App3.Models;
+using App3.Services;
 using App3.Views;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace App3.ViewModels
@@ -11,20 +16,17 @@ namespace App3.ViewModels
     public class VehicleMakesViewModel : BaseViewModel
     {
         private VehicleMake _selectedItem;
-
         public ObservableCollection<VehicleMake> Items { get; }
         public Command LoadItemsCommand { get; }
         public Command AddItemCommand { get; }
         public Command<VehicleMake> ItemTapped { get; }
-
+        public Command FilterVehicleMakersCommand { get; }
         public VehicleMakesViewModel()
         {
             Title = "Manufacturers";
             Items = new ObservableCollection<VehicleMake>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
-
             ItemTapped = new Command<VehicleMake>(OnItemSelected);
-
             AddItemCommand = new Command(OnAddItem);
         }
 

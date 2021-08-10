@@ -8,10 +8,11 @@ namespace App3.Services
 {
     public class MockVehicleMakeDataStore : IDataStore<VehicleMake>
     {
-        readonly List<VehicleMake> items;
+        public readonly List<VehicleMake> items;
 
         public MockVehicleMakeDataStore()
         {
+
             items = new List<VehicleMake>()
             {
                 new VehicleMake { Id = "1", Name = "Bayerische Motoren Werke", Abrv="BMW" },
@@ -38,6 +39,13 @@ namespace App3.Services
             return await Task.FromResult(true);
         }
 
+        public async Task<bool> UpdateItemAbbrAsync(string abbreviation, string id)
+        {
+            var item = items.Where((VehicleMake arg) => arg.Id == id).FirstOrDefault();
+            item.Abrv = abbreviation;
+            return await await Task.FromResult(UpdateItemAsync(item));
+        }
+
         public async Task<bool> DeleteItemAsync(string id)
         {
             var oldItem = items.Where((VehicleMake arg) => arg.Id == id).FirstOrDefault();
@@ -54,6 +62,16 @@ namespace App3.Services
         public async Task<IEnumerable<VehicleMake>> GetItemsAsync(bool forceRefresh = false)
         {
             return await Task.FromResult(items);
+        }
+
+        public List<VehicleMake> GetItems()
+        {
+            return items;
+        }
+
+        public VehicleMake GetItem(string id)
+        {
+            return items.Where((VehicleMake arg) => arg.Id == id).FirstOrDefault();
         }
 
     }

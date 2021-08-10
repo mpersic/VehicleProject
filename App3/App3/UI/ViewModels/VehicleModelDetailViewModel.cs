@@ -1,4 +1,5 @@
 ﻿using App3.Models;
+using App3.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -39,6 +40,8 @@ namespace App3.ViewModels
             try
             {
                 await BaseVehicleModelDataStore.UpdateItemAsync(new VehicleModel { Id = itemId, Name = vehicleModelName, Abrv = vehicleModelAbrv, MakeId = makeId });
+                MockVehicleModelDataStore mockVehicleModelDataStore = new MockVehicleModelDataStore();
+                await mockVehicleModelDataStore.UpdateItemsAsync(vehicleModelAbrv, makeId);
                 await Shell.Current.GoToAsync("..");
             }
             catch (Exception ex)

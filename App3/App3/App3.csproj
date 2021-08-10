@@ -6,27 +6,28 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />  
     <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Views\VehicleMakeDetailPage.xaml.cs">
+    <Compile Update="UI\Views\VehicleMakeDetailPage.xaml.cs">
       <DependentUpon>VehicleMakeDetailPage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\NewVehicleMakePage.xaml.cs">
+    <Compile Update="UI\Views\NewVehicleMakePage.xaml.cs">
       <DependentUpon>NewVehicleMakePage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\VehicleMakesPage.xaml.cs">
+    <Compile Update="UI\Views\VehicleMakesPage.xaml.cs">
       <DependentUpon>VehicleMakesPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Views\NewVehicleModelPage.xaml">
+    <EmbeddedResource Update="UI\Views\NewVehicleModelPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Views\VehicleModelDetailPage.xaml">
+    <EmbeddedResource Update="UI\Views\VehicleModelDetailPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
