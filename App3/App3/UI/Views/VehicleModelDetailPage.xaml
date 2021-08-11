@@ -15,6 +15,6 @@
         <Label Text="Name:" FontSize="Medium" />
         <Entry Text="{Binding VehicleModelName}" FontSize="Small"/>
         <Label Text="Abbreviation:" FontSize="Medium" />
-        <Entry Text="{Binding VehicleModelAbrv}" FontSize="Small"/>
+        <Label Text="{Binding VehicleModelAbrv}" FontSize="Small"/>
     </StackLayout>
 </ContentPage>

@@ -39,9 +39,8 @@ namespace App3.ViewModels
         {
             try
             {
-                await BaseVehicleModelDataStore.UpdateItemAsync(new VehicleModel { Id = itemId, Name = vehicleModelName, Abrv = vehicleModelAbrv, MakeId = makeId });
                 MockVehicleModelDataStore mockVehicleModelDataStore = new MockVehicleModelDataStore();
-                await mockVehicleModelDataStore.UpdateItemsAsync(vehicleModelAbrv, makeId);
+                await BaseVehicleModelDataStore.UpdateItemAsync(new VehicleModel { Id = itemId, Name = vehicleModelName, Abrv = vehicleModelAbrv, MakeId = makeId });
                 await Shell.Current.GoToAsync("..");
             }
             catch (Exception ex)
