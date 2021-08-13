@@ -17,6 +17,12 @@
         <Label Text="Abbreviation:" FontSize="Medium" />
         <Entry Text="{Binding VehicleMakeAbrv}" FontSize="Small"/>
         <Label Text="Vehicles:" FontSize="Medium" />
+        <Label Text="Filter Items:" 
+               VerticalOptions="Center"/>
+        <Picker ItemsSource="{Binding FilterOptions}" 
+                SelectedItem="{Binding SelectedFilter}" 
+                VerticalOptions="Center" 
+                HorizontalOptions="FillAndExpand" />
         <RefreshView x:DataType="local:VehicleMakeDetailViewModel" Command="{Binding LoadVehicleModelsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
             <CollectionView x:Name="VehicleModels"
                 ItemsSource="{Binding VehicleModels}"
