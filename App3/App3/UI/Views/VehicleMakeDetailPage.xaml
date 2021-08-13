@@ -7,6 +7,7 @@
              xmlns:local="clr-namespace:App3.ViewModels"  
              xmlns:model="clr-namespace:App3.Models"  >
     <ContentPage.ToolbarItems Order="Secondary">
+        <ToolbarItem Text="Sort" Command="{Binding SortVehicleModelCommand}"/>
         <ToolbarItem Text="Add New Vehicle" Command="{Binding AddVehicleModelCommand}" Order="Secondary"/>
         <ToolbarItem Text="Update Manufacturer" Command="{Binding UpdateVehicleMakeCommand}" Order="Secondary"  />
         <ToolbarItem Text="Delete Manufacturer" Command="{Binding DeleteVehicleMakeCommand}" Order="Secondary"  />
@@ -16,13 +17,13 @@
         <Entry Text="{Binding VehicleMakeName}" FontSize="Small"/>
         <Label Text="Abbreviation:" FontSize="Medium" />
         <Entry Text="{Binding VehicleMakeAbrv}" FontSize="Small"/>
-        <Label Text="Vehicles:" FontSize="Medium" />
         <Label Text="Filter Items:" 
                VerticalOptions="Center"/>
         <Picker ItemsSource="{Binding FilterOptions}" 
                 SelectedItem="{Binding SelectedFilter}" 
                 VerticalOptions="Center" 
                 HorizontalOptions="FillAndExpand" />
+        <Label Text="Vehicles:" FontSize="Medium" />
         <RefreshView x:DataType="local:VehicleMakeDetailViewModel" Command="{Binding LoadVehicleModelsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
             <CollectionView x:Name="VehicleModels"
                 ItemsSource="{Binding VehicleModels}"

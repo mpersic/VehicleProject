@@ -27,8 +27,10 @@ namespace App3.ViewModels
 
         public Command DeleteVehicleMakeCommand { get; }
         public Command UpdateVehicleMakeCommand { get; }
+        public Command SortVehicleModelCommand { get; }
 
-        string selectedFilter = "All";
+        private string selectedFilter = "All";
+        private string orderState = "Ascending";
         private string itemId;
         private string vehicleMakeName;
         private string vehicleMakeAbrv;
@@ -46,6 +48,7 @@ namespace App3.ViewModels
 
             UpdateVehicleMakeCommand = new Command(UpdateItem);
             DeleteVehicleMakeCommand = new Command(DeleteItem);
+            SortVehicleModelCommand = new Command(SortItems);
             FilterOptions = new ObservableRangeCollection<string>
             {
                 "All",
@@ -53,6 +56,20 @@ namespace App3.ViewModels
                 "A7",
                 "X5"
             };
+        }
+
+        private void SortItems()
+        {
+            if (orderState == "Ascending")
+            {
+                VehicleModels.ReplaceRange(AllItems.Where(a => a.MakeId == itemId && (a.Abrv == SelectedFilter || SelectedFilter == "All")).OrderBy(x => x.Name));
+                orderState = "Descending";
+            }
+            else
+            {
+                VehicleModels.ReplaceRange(AllItems.Where(a => a.MakeId == itemId && (a.Abrv == SelectedFilter || SelectedFilter == "All")).OrderByDescending(x => x.Name));
+                orderState = "Ascending";
+            }
         }
 
         void FilterItems()

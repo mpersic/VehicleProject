@@ -23,7 +23,9 @@ namespace App3.Services
             List<VehicleMake> vehicleMakes = mockVehicleMakeDataStore.GetItems();
             VehicleModel x2 = mapper.Map<VehicleMake, VehicleModel>(vehicleMakes.ElementAt(0));
             VehicleModel x1 = mapper.Map<VehicleMake, VehicleModel>(vehicleMakes.ElementAt(0));
+            VehicleModel m3 = mapper.Map<VehicleMake, VehicleModel>(vehicleMakes.ElementAt(0));
             VehicleModel x5 = mapper.Map<VehicleMake, VehicleModel>(vehicleMakes.ElementAt(0));
+            m3.Name = "M3";
             x2.Name = "X2";
             x1.Name = "X1";
             x5.Name = "X5";
@@ -36,16 +38,20 @@ namespace App3.Services
             a3.Name = "A1";
             a1.Name = "A3";
             VehicleModel fiesta = mapper.Map<VehicleMake, VehicleModel>(vehicleMakes.ElementAt(3));
+            VehicleModel mustang = mapper.Map<VehicleMake, VehicleModel>(vehicleMakes.ElementAt(3));
             fiesta.Name = "Fiesta";
+            mustang.Name = "Mustang";
             items = new List<VehicleModel>()
             {
                 x2,
+                m3,
                 x5,
                 x1,
                 a5,
                 a8,
                 a3,
                 a1,
+                mustang,
                 fiesta
             };
             foreach(var item in items)

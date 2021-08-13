@@ -28,6 +28,7 @@ namespace App3.ViewModels
         public ObservableRangeCollection<VehicleMake> AllItems { get; set; }
 
         string selectedFilter = "All";
+        string orderState = "Descending";
 
         public VehicleMakesViewModel()
         {
@@ -37,6 +38,7 @@ namespace App3.ViewModels
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
             ItemTapped = new Command<VehicleMake>(OnItemSelected);
             AddItemCommand = new Command(OnAddItem);
+            SortCommand = new Command(SortItems);
             FilterOptions = new ObservableCollection<string>
                 {
                     "BMW",
@@ -53,13 +55,28 @@ namespace App3.ViewModels
                     FilterItems();
             }
         }
-        void FilterItems()
+
+        private void SortItems()
+        {
+            if (orderState == "Ascending")
+            {
+                Items.ReplaceRange(AllItems.Where(a => a.Abrv == SelectedFilter || SelectedFilter == "All").OrderBy(x => x.Abrv));
+                orderState = "Descending";
+            }
+            else
+            {
+                Items.ReplaceRange(AllItems.Where(a => a.Abrv == SelectedFilter || SelectedFilter == "All").OrderByDescending(x => x.Abrv));
+                orderState = "Ascending";
+            }
+        }
+
+        private void FilterItems()
         {
             Items.ReplaceRange(AllItems.Where(a => a.Abrv == SelectedFilter || SelectedFilter == "All"));
         }
 
 
-        async Task ExecuteLoadItemsCommand()
+        private async Task ExecuteLoadItemsCommand()
         {
             IsBusy = true;
 
