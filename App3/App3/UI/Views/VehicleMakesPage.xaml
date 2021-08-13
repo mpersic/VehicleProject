@@ -9,7 +9,7 @@
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Add" Command="{Binding AddItemCommand}" />
-        <ToolbarItem Text="Sort" Command="{Binding SortCommand,Mode=OneTime}"/>
+        <ToolbarItem Text="Sort" Command="{Binding SortCommand}"/>
     </ContentPage.ToolbarItems>
     <StackLayout Spacing="20" Padding="15">
         <Label Text="Filter Items:" 
