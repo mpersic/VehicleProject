@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Autofac;
 
 namespace App3.Services
 {
@@ -13,34 +14,46 @@ namespace App3.Services
         readonly List<VehicleModel> items;
         public MockVehicleModelDataStore()
         {
+
+            var containerBuilder = new ContainerBuilder();
+            containerBuilder.RegisterModule<VehicleModelProgramModule>();
+            var container = containerBuilder.Build();
+            var notificationService = container.Resolve<IInfo>();
+            var vehicleModelService = container.Resolve<VehicleModelService>();
+
             var configuration = new MapperConfiguration(cfg =>
             cfg.CreateMap<VehicleMake, VehicleModel>()
             .ForMember(dest => dest.MakeId, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.Abrv, opt => opt.MapFrom(src => src.Abrv))
             );
             var mapper = configuration.CreateMapper();
+
             MockVehicleMakeDataStore mockVehicleMakeDataStore = new MockVehicleMakeDataStore();
             List<VehicleMake> vehicleMakes = mockVehicleMakeDataStore.GetItems();
+
             VehicleModel x2 = mapper.Map<VehicleMake, VehicleModel>(vehicleMakes.ElementAt(0));
             VehicleModel x1 = mapper.Map<VehicleMake, VehicleModel>(vehicleMakes.ElementAt(0));
             VehicleModel m3 = mapper.Map<VehicleMake, VehicleModel>(vehicleMakes.ElementAt(0));
             VehicleModel x5 = mapper.Map<VehicleMake, VehicleModel>(vehicleMakes.ElementAt(0));
-            m3.Name = "M3";
-            x2.Name = "X2";
-            x1.Name = "X1";
-            x5.Name = "X5";
+            vehicleModelService.ChangeName(m3, "M3");
+            vehicleModelService.ChangeName(x2, "X2");
+            vehicleModelService.ChangeName(x1, "X1");
+            vehicleModelService.ChangeName(x5, "X5");
+
             VehicleModel a5 = mapper.Map<VehicleMake, VehicleModel>(vehicleMakes.ElementAt(1));
             VehicleModel a8 = mapper.Map<VehicleMake, VehicleModel>(vehicleMakes.ElementAt(1));
             VehicleModel a1 = mapper.Map<VehicleMake, VehicleModel>(vehicleMakes.ElementAt(1));
             VehicleModel a3 = mapper.Map<VehicleMake, VehicleModel>(vehicleMakes.ElementAt(1));
-            a5.Name = "A5";
-            a8.Name = "A8";
-            a3.Name = "A1";
-            a1.Name = "A3";
+            vehicleModelService.ChangeName(a5, "A5");
+            vehicleModelService.ChangeName(a8, "A8");
+            vehicleModelService.ChangeName(a3, "A1");
+            vehicleModelService.ChangeName(a1, "A3");
+
             VehicleModel fiesta = mapper.Map<VehicleMake, VehicleModel>(vehicleMakes.ElementAt(3));
             VehicleModel mustang = mapper.Map<VehicleMake, VehicleModel>(vehicleMakes.ElementAt(3));
-            fiesta.Name = "Fiesta";
-            mustang.Name = "Mustang";
+            vehicleModelService.ChangeName(fiesta, "Fiesta");
+            vehicleModelService.ChangeName(mustang, "Mustang");
+
             items = new List<VehicleModel>()
             {
                 x2,
