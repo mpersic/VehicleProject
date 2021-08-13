@@ -1,8 +1,10 @@
 ﻿using App3.Models;
 using App3.Views;
+using MvvmHelpers;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
@@ -15,20 +17,27 @@ namespace App3.ViewModels
 
         private VehicleModel _selectedItem;
 
-        public ObservableCollection<VehicleModel> VehicleModels { get; }
+        public ObservableRangeCollection<VehicleModel> VehicleModels { get; }
+        public ObservableRangeCollection<VehicleModel> AllItems { get; set; }
+        public ObservableRangeCollection<string> FilterOptions { get; }
         public Command LoadVehicleModelsCommand { get; }
         public Command AddVehicleModelCommand { get; }
 
         public Command<VehicleModel> VehicleModelTapped { get; }
 
         public Command DeleteVehicleMakeCommand { get; }
-
         public Command UpdateVehicleMakeCommand { get; }
+
+        string selectedFilter = "All";
+        private string itemId;
+        private string vehicleMakeName;
+        private string vehicleMakeAbrv;
 
         public VehicleMakeDetailViewModel()
         {
             Title = "Manufacturer";
-            VehicleModels = new ObservableCollection<VehicleModel>();
+            VehicleModels = new ObservableRangeCollection<VehicleModel>();
+            AllItems = new ObservableRangeCollection<VehicleModel>();
             LoadVehicleModelsCommand = new Command(async () => await ExecuteLoadItemsCommand());
 
             VehicleModelTapped = new Command<VehicleModel>(OnVehicleModelSelected);
@@ -37,6 +46,18 @@ namespace App3.ViewModels
 
             UpdateVehicleMakeCommand = new Command(UpdateItem);
             DeleteVehicleMakeCommand = new Command(DeleteItem);
+            FilterOptions = new ObservableRangeCollection<string>
+            {
+                "All",
+                "A1",
+                "A7",
+                "X5"
+            };
+        }
+
+        void FilterItems()
+        {
+            VehicleModels.ReplaceRange(AllItems.Where( a => a.MakeId == itemId && (a.Name == SelectedFilter || SelectedFilter == "All")));
         }
 
         async Task ExecuteLoadItemsCommand()
@@ -47,11 +68,8 @@ namespace App3.ViewModels
             {
                 VehicleModels.Clear();
                 var items = await BaseVehicleModelDataStore.GetItemsAsync(true);
-                foreach (var item in items)
-                {
-                    if (item.MakeId == itemId)
-                        VehicleModels.Add(item);
-                }
+                AllItems.ReplaceRange(items);
+                FilterItems();
             }
             catch (Exception ex)
             {
@@ -62,7 +80,6 @@ namespace App3.ViewModels
                 IsBusy = false;
             }
         }
-
 
         public void OnAppearing()
         {
@@ -133,10 +150,15 @@ namespace App3.ViewModels
         {
             await Shell.Current.GoToAsync($"{nameof(NewVehicleModelPage)}?{nameof(NewVehicleModelViewModel.ItemId)}={ItemId}");
         }
-
-        private string itemId;
-        private string vehicleMakeName;
-        private string vehicleMakeAbrv;
+        public string SelectedFilter
+        {
+            get => selectedFilter;
+            set
+            {
+                if (SetProperty(ref selectedFilter, value))
+                    FilterItems();
+            }
+        }
         public string Id { get; set; }
 
         public string VehicleMakeName
