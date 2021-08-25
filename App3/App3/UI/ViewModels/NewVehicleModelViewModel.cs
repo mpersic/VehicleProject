@@ -3,15 +3,23 @@ using App3.Services;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Text;
 using Xamarin.Forms;
 
 namespace App3.ViewModels
 {
     [QueryProperty(nameof(ItemId), nameof(ItemId))]
-    class NewVehicleModelViewModel: BaseViewModel
+    class NewVehicleModelViewModel: INotifyPropertyChanged
     {
+
+        public Command SaveCommand { get; }
+        public Command CancelCommand { get; }
+        public IDataStore<VehicleMake> BaseVehicleMakeDataStore => DependencyService.Get<IDataStore<VehicleMake>>();
+        public IDataStore<VehicleModel> BaseVehicleModelDataStore => DependencyService.Get<IDataStore<VehicleModel>>();
+
         private string name;
         private string itemId;
 
@@ -38,7 +46,6 @@ namespace App3.ViewModels
             set
             {
                 itemId = value;
-                //LoadItemId(value);
             }
         }
 
@@ -48,9 +55,6 @@ namespace App3.ViewModels
             get => name;
             set => SetProperty(ref name, value);
         }
-
-        public Command SaveCommand { get; }
-        public Command CancelCommand { get; }
 
         private async void OnCancel()
         {
@@ -88,5 +92,44 @@ namespace App3.ViewModels
             // This will pop the current page off the navigation stack
             await Shell.Current.GoToAsync("..");
         }
+
+        bool isBusy = false;
+        public bool IsBusy
+        {
+            get { return isBusy; }
+            set { SetProperty(ref isBusy, value); }
+        }
+
+        string title = string.Empty;
+        public string Title
+        {
+            get { return title; }
+            set { SetProperty(ref title, value); }
+        }
+
+        protected bool SetProperty<T>(ref T backingStore, T value,
+            [CallerMemberName] string propertyName = "",
+            Action onChanged = null)
+        {
+            if (EqualityComparer<T>.Default.Equals(backingStore, value))
+                return false;
+
+            backingStore = value;
+            onChanged?.Invoke();
+            OnPropertyChanged(propertyName);
+            return true;
+        }
+
+        #region INotifyPropertyChanged
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            var changed = PropertyChanged;
+            if (changed == null)
+                return;
+
+            changed.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        #endregion
     }
 }

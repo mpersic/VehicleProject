@@ -1,10 +1,14 @@
 ﻿using App3.Models;
+using App3.Services;
 using App3.Views;
 using MvvmHelpers;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
@@ -12,23 +16,21 @@ using Xamarin.Forms.Internals;
 namespace App3.ViewModels
 {
     [QueryProperty(nameof(ItemId), nameof(ItemId))]
-    public class VehicleMakeDetailViewModel : BaseViewModel
+    public class VehicleMakeDetailViewModel : INotifyPropertyChanged
     {
-
-        private VehicleModel _selectedItem;
-
-        public ObservableRangeCollection<VehicleModel> VehicleModels { get; }
-        public ObservableRangeCollection<VehicleModel> AllItems { get; set; }
-        public ObservableRangeCollection<string> FilterOptions { get; }
         public Command LoadVehicleModelsCommand { get; }
         public Command AddVehicleModelCommand { get; }
-
         public Command<VehicleModel> VehicleModelTapped { get; }
-
         public Command DeleteVehicleMakeCommand { get; }
         public Command UpdateVehicleMakeCommand { get; }
         public Command SortVehicleModelCommand { get; }
+        public IDataStore<VehicleMake> BaseVehicleMakeDataStore => DependencyService.Get<IDataStore<VehicleMake>>();
+        public IDataStore<VehicleModel> BaseVehicleModelDataStore => DependencyService.Get<IDataStore<VehicleModel>>();
+        public ObservableRangeCollection<VehicleModel> VehicleModels { get; }
+        public ObservableRangeCollection<VehicleModel> AllItems { get; set; }
+        public ObservableRangeCollection<string> FilterOptions { get; }
 
+        private VehicleModel _selectedItem;
         private string selectedFilter = "All";
         private string orderState = "Ascending";
         private string itemId;
@@ -41,11 +43,8 @@ namespace App3.ViewModels
             VehicleModels = new ObservableRangeCollection<VehicleModel>();
             AllItems = new ObservableRangeCollection<VehicleModel>();
             LoadVehicleModelsCommand = new Command(async () => await ExecuteLoadItemsCommand());
-
             VehicleModelTapped = new Command<VehicleModel>(OnVehicleModelSelected);
-
             AddVehicleModelCommand = new Command(OnAddItem);
-
             UpdateVehicleMakeCommand = new Command(UpdateItem);
             DeleteVehicleMakeCommand = new Command(DeleteItem);
             SortVehicleModelCommand = new Command(SortItems);
@@ -217,5 +216,43 @@ namespace App3.ViewModels
                 Debug.WriteLine("Failed to Load Item");
             }
         }
+        bool isBusy = false;
+        public bool IsBusy
+        {
+            get { return isBusy; }
+            set { SetProperty(ref isBusy, value); }
+        }
+
+        string title = string.Empty;
+        public string Title
+        {
+            get { return title; }
+            set { SetProperty(ref title, value); }
+        }
+
+        protected bool SetProperty<T>(ref T backingStore, T value,
+            [CallerMemberName] string propertyName = "",
+            Action onChanged = null)
+        {
+            if (EqualityComparer<T>.Default.Equals(backingStore, value))
+                return false;
+
+            backingStore = value;
+            onChanged?.Invoke();
+            OnPropertyChanged(propertyName);
+            return true;
+        }
+
+        #region INotifyPropertyChanged
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            var changed = PropertyChanged;
+            if (changed == null)
+                return;
+
+            changed.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        #endregion
     }
 }

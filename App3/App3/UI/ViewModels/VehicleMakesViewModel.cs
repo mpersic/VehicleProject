@@ -5,6 +5,7 @@ using MvvmHelpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -14,21 +15,21 @@ using Xamarin.Forms;
 
 namespace App3.ViewModels
 {
-    public class VehicleMakesViewModel : BaseViewModel
+    public class VehicleMakesViewModel : INotifyPropertyChanged
     {
-        private VehicleMake _selectedItem;
-        public ObservableCollection<string> FilterOptions { get; }
         public Command LoadItemsCommand { get; }
         public Command AddItemCommand { get; }
         public Command<VehicleMake> ItemTapped { get; }
         public Command FilterVehicleMakersCommand { get; }
         public Command SortCommand { get; }
-
+        public IDataStore<VehicleMake> BaseVehicleMakeDataStore => DependencyService.Get<IDataStore<VehicleMake>>();
+        public ObservableCollection<string> FilterOptions { get; }
         public ObservableRangeCollection<VehicleMake> Items { get; set; }
         public ObservableRangeCollection<VehicleMake> AllItems { get; set; }
 
-        string selectedFilter = "All";
-        string orderState = "Descending";
+        private VehicleMake _selectedItem;
+        private string selectedFilter = "All";
+        private string orderState = "Descending";
 
         public VehicleMakesViewModel()
         {
@@ -126,5 +127,44 @@ namespace App3.ViewModels
             // This will push the ItemDetailPage onto the navigation stack
             await Shell.Current.GoToAsync($"{nameof(VehicleMakeDetailPage)}?{nameof(VehicleMakeDetailViewModel.ItemId)}={item.Id}");
         }
+
+        bool isBusy = false;
+        public bool IsBusy
+        {
+            get { return isBusy; }
+            set { SetProperty(ref isBusy, value); }
+        }
+
+        string title = string.Empty;
+        public string Title
+        {
+            get { return title; }
+            set { SetProperty(ref title, value); }
+        }
+
+        protected bool SetProperty<T>(ref T backingStore, T value,
+            [CallerMemberName] string propertyName = "",
+            Action onChanged = null)
+        {
+            if (EqualityComparer<T>.Default.Equals(backingStore, value))
+                return false;
+
+            backingStore = value;
+            onChanged?.Invoke();
+            OnPropertyChanged(propertyName);
+            return true;
+        }
+
+        #region INotifyPropertyChanged
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            var changed = PropertyChanged;
+            if (changed == null)
+                return;
+
+            changed.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        #endregion
     }
 }
