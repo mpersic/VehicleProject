@@ -12,6 +12,7 @@ namespace App3.Services
     public class MockVehicleModelDataStore : IDataStore<VehicleModel>
     {
         readonly List<VehicleModel> items;
+        private IMapper mapper;
         public MockVehicleModelDataStore()
         {
 
@@ -22,11 +23,8 @@ namespace App3.Services
             var vehicleModelService = container.Resolve<VehicleModelService>();
 
             var configuration = new MapperConfiguration(cfg =>
-            cfg.CreateMap<VehicleMake, VehicleModel>()
-            .ForMember(dest => dest.MakeId, opt => opt.MapFrom(src => src.Id))
-            .ForMember(dest => dest.Abrv, opt => opt.MapFrom(src => src.Abrv))
-            );
-            var mapper = configuration.CreateMapper();
+            cfg.AddProfile<NewVehicleModelProfile>()); ;
+            mapper = configuration.CreateMapper();
 
             MockVehicleMakeDataStore mockVehicleMakeDataStore = new MockVehicleMakeDataStore();
             List<VehicleMake> vehicleMakes = mockVehicleMakeDataStore.GetItems();
@@ -72,6 +70,7 @@ namespace App3.Services
                 item.Id = Guid.NewGuid().ToString();
             }
         }
+
         public async Task<bool> AddItemAsync(VehicleModel item)
         {
             items.Add(item);

@@ -7,8 +7,11 @@ namespace App3.Services
 {
     class VehicleMakeService
     {
+        private IDataStore<VehicleMake> dataStore;
+        //public VehicleMakeService(IDataStore<VehicleMake> dataStore)
         public VehicleMakeService()
         {
+            //this.dataStore = dataStore;
         }
         public void ChangeName(VehicleMake vehicleMake, string newName)
         {

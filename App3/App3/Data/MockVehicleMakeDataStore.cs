@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using App3.DIContainer;
 namespace App3.Services
 {
     public class MockVehicleMakeDataStore : IDataStore<VehicleMake>
@@ -13,10 +13,7 @@ namespace App3.Services
 
         public MockVehicleMakeDataStore()
         {
-
-            var containerBuilder = new ContainerBuilder();
-            containerBuilder.RegisterModule<VehicleMakeProgramModule>();
-            var container = containerBuilder.Build();
+            var container = DIVehicleMakeContainer.Configure();
 
             var vehicleMakeService = container.Resolve<VehicleMakeService>();
 
