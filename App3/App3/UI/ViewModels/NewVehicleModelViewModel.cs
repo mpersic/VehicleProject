@@ -19,7 +19,8 @@ namespace App3.ViewModels
         public Command CancelCommand { get; }
         public IDataStore<VehicleMake> BaseVehicleMakeDataStore => DependencyService.Get<IDataStore<VehicleMake>>();
         public IDataStore<VehicleModel> BaseVehicleModelDataStore => DependencyService.Get<IDataStore<VehicleModel>>();
-
+        
+        private IMapper mapper;
         private string name;
         private string itemId;
 
@@ -31,6 +32,10 @@ namespace App3.ViewModels
                 (_, __) => SaveCommand.ChangeCanExecute();
             Name = name;
             ItemId = itemId;
+
+            var configuration = new MapperConfiguration(cfg =>
+            cfg.AddProfile<NewVehicleModelProfile>());
+            mapper = configuration.CreateMapper();
         }
 
         private bool ValidateSave()
@@ -77,12 +82,6 @@ namespace App3.ViewModels
 
         private async void OnSave()
         {
-            var configuration = new MapperConfiguration(cfg =>
-            cfg.CreateMap<VehicleMake, VehicleModel>()
-            .ForMember(dest => dest.MakeId, opt => opt.MapFrom(src => src.Id))
-            .ForMember(dest => dest.Abrv, opt => opt.MapFrom(src => src.Abrv))
-            );
-            var mapper = configuration.CreateMapper();
             var item = await BaseVehicleMakeDataStore.GetItemAsync(ItemId);
             VehicleModel newItem = mapper.Map<VehicleMake, VehicleModel>(item);
             newItem.Id = Guid.NewGuid().ToString();

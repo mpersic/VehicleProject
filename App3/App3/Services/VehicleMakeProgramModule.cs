@@ -10,8 +10,6 @@ namespace App3.Services
     {
         protected override void Load(ContainerBuilder builder)
         {
-
-            builder.RegisterType<VehicleMake>().As<IInfo>();
             builder.RegisterType<VehicleMakeService>().AsSelf();
         }
     }

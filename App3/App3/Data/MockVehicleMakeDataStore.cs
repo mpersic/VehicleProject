@@ -18,7 +18,6 @@ namespace App3.Services
             containerBuilder.RegisterModule<VehicleMakeProgramModule>();
             var container = containerBuilder.Build();
 
-            var notificationService = container.Resolve<IInfo>();
             var vehicleMakeService = container.Resolve<VehicleMakeService>();
 
             items = new List<VehicleMake>()
