@@ -6,25 +6,22 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Autofac;
+using App3.DIContainer;
 
 namespace App3.Services
 {
     public class MockVehicleModelDataStore : IDataStore<VehicleModel>
     {
         readonly List<VehicleModel> items;
-        private IMapper mapper;
         public MockVehicleModelDataStore()
         {
-
-            var containerBuilder = new ContainerBuilder();
-            containerBuilder.RegisterModule<VehicleModelProgramModule>();
-            var container = containerBuilder.Build();
+            var container = DIVehicleModelContainer.Configure();
             var notificationService = container.Resolve<IInfo>();
             var vehicleModelService = container.Resolve<VehicleModelService>();
 
             var configuration = new MapperConfiguration(cfg =>
             cfg.AddProfile<NewVehicleModelProfile>()); ;
-            mapper = configuration.CreateMapper();
+            var mapper = configuration.CreateMapper();
 
             MockVehicleMakeDataStore mockVehicleMakeDataStore = new MockVehicleMakeDataStore();
             List<VehicleMake> vehicleMakes = mockVehicleMakeDataStore.GetItems();
@@ -65,11 +62,12 @@ namespace App3.Services
                 mustang,
                 fiesta
             };
-            foreach(var item in items)
+            foreach (var item in items)
             {
                 item.Id = Guid.NewGuid().ToString();
-            }
+            };
         }
+
 
         public async Task<bool> AddItemAsync(VehicleModel item)
         {

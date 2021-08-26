@@ -13,6 +13,7 @@ namespace App3.Services
 
         public MockVehicleMakeDataStore()
         {
+            //TODO ovdje je za primjer, prebacit tamo gdje treba
             var container = DIVehicleMakeContainer.Configure();
 
             var vehicleMakeService = container.Resolve<VehicleMakeService>();
