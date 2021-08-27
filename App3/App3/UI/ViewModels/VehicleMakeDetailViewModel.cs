@@ -29,6 +29,8 @@ namespace App3.ViewModels
         public ObservableRangeCollection<VehicleModel> VehicleModels { get; }
         public ObservableRangeCollection<VehicleModel> AllItems { get; set; }
         public ObservableRangeCollection<string> FilterOptions { get; }
+        public VehicleMakeService VehicleMakeService { get; set; }
+        public VehicleModelService VehicleModelService { get; set; }
 
         private VehicleModel _selectedItem;
         private string selectedFilter = "All";
@@ -55,6 +57,8 @@ namespace App3.ViewModels
                 "A7",
                 "X5"
             };
+            VehicleMakeService = new VehicleMakeService(BaseVehicleMakeDataStore);
+            VehicleModelService = new VehicleModelService(BaseVehicleModelDataStore);
         }
 
         private void SortItems()
@@ -83,7 +87,7 @@ namespace App3.ViewModels
             try
             {
                 VehicleModels.Clear();
-                var items = await BaseVehicleModelDataStore.GetItemsAsync(true);
+                var items = await VehicleModelService.GetItemsAsync(true);
                 AllItems.ReplaceRange(items);
                 FilterItems();
             }
@@ -129,10 +133,10 @@ namespace App3.ViewModels
                 {
                     if (item.MakeId == Id)
                     {
-                        await BaseVehicleModelDataStore.DeleteItemAsync(item.Id);
+                        await VehicleModelService.DeleteItemAsync(item.Id);
                     }
                 }
-                await BaseVehicleMakeDataStore.DeleteItemAsync(Id);
+                await VehicleMakeService.DeleteItemAsync(Id);
 
                 await Shell.Current.GoToAsync("../..");
             }
@@ -146,12 +150,12 @@ namespace App3.ViewModels
         {
             try
             {
-                await BaseVehicleMakeDataStore.UpdateItemAsync(new VehicleMake { Id= Id, Name = VehicleMakeName, Abrv=VehicleMakeAbrv });
+                await VehicleMakeService.UpdateItemAsync(new VehicleMake { Id= Id, Name = VehicleMakeName, Abrv=VehicleMakeAbrv });
                 foreach(var item in VehicleModels)
                 {
                     if (item.MakeId == Id)
                     {
-                        await BaseVehicleModelDataStore.UpdateItemAsync(new VehicleModel { Id = item.Id, Name = item.Name, Abrv = item.Abrv, MakeId = item.MakeId });
+                        await VehicleModelService.UpdateItemAsync(new VehicleModel { Id = item.Id, Name = item.Name, Abrv = item.Abrv, MakeId = item.MakeId });
                     }
                 }
                 await Shell.Current.GoToAsync("..");

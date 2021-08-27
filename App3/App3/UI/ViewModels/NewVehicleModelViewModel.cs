@@ -19,7 +19,9 @@ namespace App3.ViewModels
         public Command CancelCommand { get; }
         public IDataStore<VehicleMake> BaseVehicleMakeDataStore => DependencyService.Get<IDataStore<VehicleMake>>();
         public IDataStore<VehicleModel> BaseVehicleModelDataStore => DependencyService.Get<IDataStore<VehicleModel>>();
-        
+        public VehicleModelService VehicleModelService { get; set; }
+        public VehicleMakeService VehicleMakeService { get; set; }
+
         private IMapper mapper;
         private string name;
         private string itemId;
@@ -32,6 +34,9 @@ namespace App3.ViewModels
                 (_, __) => SaveCommand.ChangeCanExecute();
             Name = name;
             ItemId = itemId;
+
+            VehicleMakeService = new VehicleMakeService(BaseVehicleMakeDataStore);
+            VehicleModelService = new VehicleModelService(BaseVehicleModelDataStore);
 
             var configuration = new MapperConfiguration(cfg =>
             cfg.AddProfile<NewVehicleModelProfile>());
@@ -71,7 +76,7 @@ namespace App3.ViewModels
         {
             try
             {
-                var item = await BaseVehicleMakeDataStore.GetItemAsync(itemId);
+                var item = await VehicleMakeService.GetItemAsync(itemId);
                 ItemId = item.Id;
             }
             catch (Exception)
@@ -82,11 +87,11 @@ namespace App3.ViewModels
 
         private async void OnSave()
         {
-            var item = await BaseVehicleMakeDataStore.GetItemAsync(ItemId);
+            var item = await VehicleMakeService.GetItemAsync(ItemId);
             VehicleModel newItem = mapper.Map<VehicleMake, VehicleModel>(item);
             newItem.Id = Guid.NewGuid().ToString();
             newItem.Name = Name;
-            await BaseVehicleModelDataStore.AddItemAsync(newItem);
+            await VehicleModelService.AddItemAsync(newItem);
 
             // This will pop the current page off the navigation stack
             await Shell.Current.GoToAsync("..");

@@ -15,10 +15,11 @@ namespace App3.Views
     public partial class NewVehicleModelPage : ContentPage
     {
         public VehicleModel Item { get; set; }
+        NewVehicleModelViewModel _viewModel;
         public NewVehicleModelPage()
         {
             InitializeComponent();
-            BindingContext = new NewVehicleModelViewModel();
+            BindingContext = _viewModel = new NewVehicleModelViewModel();
         }
     }
 }

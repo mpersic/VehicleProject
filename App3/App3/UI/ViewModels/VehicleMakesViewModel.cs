@@ -26,6 +26,9 @@ namespace App3.ViewModels
         public ObservableCollection<string> FilterOptions { get; }
         public ObservableRangeCollection<VehicleMake> Items { get; set; }
         public ObservableRangeCollection<VehicleMake> AllItems { get; set; }
+        public VehicleMakeService VehicleMakeService { get; set; }
+        public VehicleModelService VehicleModelService { get; set; }
+
 
         private VehicleMake _selectedItem;
         private string selectedFilter = "All";
@@ -46,6 +49,7 @@ namespace App3.ViewModels
                     "AUDI",
                     "All"
                 };
+            VehicleMakeService = new VehicleMakeService(BaseVehicleMakeDataStore);
         }
         public string SelectedFilter
         {
@@ -84,7 +88,7 @@ namespace App3.ViewModels
             try
             {
                 Items.Clear();
-                var items = await BaseVehicleMakeDataStore.GetItemsAsync(true);
+                var items = await VehicleMakeService.GetItemsAsync(true);
                 AllItems.ReplaceRange(items);
                 FilterItems();
             }

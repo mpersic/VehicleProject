@@ -1,5 +1,6 @@
 ﻿using App3.Services;
 using Autofac;
+using Autofac.Features.ResolveAnything;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,6 +24,7 @@ namespace App3.DIContainer
         {
                 var builder = new ContainerBuilder();
                 builder.RegisterModule<VehicleMakeProgramModule>();
+                builder.RegisterSource(new AnyConcreteTypeNotAlreadyRegisteredSource());
                 return builder.Build();
         }
     }

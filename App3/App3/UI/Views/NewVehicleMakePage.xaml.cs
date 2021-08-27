@@ -12,11 +12,11 @@ namespace App3.Views
     public partial class NewVehicleMakePage : ContentPage
     {
         public VehicleMake Item { get; set; }
-
+        NewVehicleMakeViewModel _viewModel;
         public NewVehicleMakePage()
         {
             InitializeComponent();
-            BindingContext = new NewVehicleMakeViewModel();
+            BindingContext = _viewModel = new NewVehicleMakeViewModel();
         }
     }
 }

@@ -13,6 +13,7 @@ namespace App3.ViewModels
     public class NewVehicleMakeViewModel : INotifyPropertyChanged
     {
         public IDataStore<VehicleMake> BaseVehicleMakeDataStore => DependencyService.Get<IDataStore<VehicleMake>>();
+        public VehicleMakeService VehicleMakeService { get; set; }
 
         private string name;
         private string abbreviation;
@@ -23,6 +24,7 @@ namespace App3.ViewModels
             CancelCommand = new Command(OnCancel);
             this.PropertyChanged +=
                 (_, __) => SaveCommand.ChangeCanExecute();
+            VehicleMakeService = new VehicleMakeService(BaseVehicleMakeDataStore);
         }
 
         private bool ValidateSave()
@@ -61,7 +63,7 @@ namespace App3.ViewModels
                 Abrv = Abbreviation
             };
 
-            await BaseVehicleMakeDataStore.AddItemAsync(newItem);
+            await VehicleMakeService.AddItemAsync(newItem);
 
             // This will pop the current page off the navigation stack
             await Shell.Current.GoToAsync("..");

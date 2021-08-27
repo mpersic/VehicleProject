@@ -16,19 +16,20 @@ namespace App3.ViewModels
         public Command DeleteVehicleModelCommand { get; }
         public Command UpdateVehicleModelCommand { get; }
         public IDataStore<VehicleModel> BaseVehicleModelDataStore => DependencyService.Get<IDataStore<VehicleModel>>();
-
+        public VehicleModelService VehicleModelService { get; set; }
         public VehicleModelDetailViewModel()
         {
             Title = "Model";
             UpdateVehicleModelCommand = new Command(UpdateItem);
             DeleteVehicleModelCommand = new Command(DeleteItem);
+            VehicleModelService = new VehicleModelService(BaseVehicleModelDataStore);
         }
 
         private async void DeleteItem(object obj)
         {
             try
             {
-                await BaseVehicleModelDataStore.DeleteItemAsync(itemId);
+                await VehicleModelService.DeleteItemAsync(itemId);
                 await Shell.Current.GoToAsync("..");
             }
             catch (Exception ex)
@@ -41,8 +42,7 @@ namespace App3.ViewModels
         {
             try
             {
-                MockVehicleModelDataStore mockVehicleModelDataStore = new MockVehicleModelDataStore();
-                await BaseVehicleModelDataStore.UpdateItemAsync(new VehicleModel { Id = itemId, Name = vehicleModelName, Abrv = vehicleModelAbrv, MakeId = makeId });
+                await VehicleModelService.UpdateItemAsync(new VehicleModel { Id = itemId, Name = vehicleModelName, Abrv = vehicleModelAbrv, MakeId = makeId });
                 await Shell.Current.GoToAsync("..");
             }
             catch (Exception ex)
@@ -95,7 +95,7 @@ namespace App3.ViewModels
         {
             try
             {
-                var item = await BaseVehicleModelDataStore.GetItemAsync(itemId);
+                var item = await VehicleModelService.GetItemAsync(itemId);
                 MakeId = item.MakeId;
                 VehicleModelName = item.Name;
                 VehicleModelAbrv = item.Abrv;
