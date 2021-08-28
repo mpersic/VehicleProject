@@ -1,5 +1,6 @@
 ﻿using App3.Models;
 using App3.Services;
+using App3.UI.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,18 +12,17 @@ using Xamarin.Forms;
 namespace App3.ViewModels
 {
     [QueryProperty(nameof(ItemId), nameof(ItemId))]
-    public class VehicleModelDetailViewModel : INotifyPropertyChanged
+    public class VehicleModelDetailViewModel : BaseViewModel
     {
         public Command DeleteVehicleModelCommand { get; }
         public Command UpdateVehicleModelCommand { get; }
-        public IDataStore<VehicleModel> BaseVehicleModelDataStore => DependencyService.Get<IDataStore<VehicleModel>>();
         public VehicleModelService VehicleModelService { get; set; }
         public VehicleModelDetailViewModel()
         {
             Title = "Model";
             UpdateVehicleModelCommand = new Command(UpdateItem);
             DeleteVehicleModelCommand = new Command(DeleteItem);
-            VehicleModelService = new VehicleModelService(BaseVehicleModelDataStore);
+            VehicleModelService = new VehicleModelService();
         }
 
         private async void DeleteItem(object obj)
@@ -105,43 +105,6 @@ namespace App3.ViewModels
                 Debug.WriteLine("Failed to Load Item");
             }
         }
-        bool isBusy = false;
-        public bool IsBusy
-        {
-            get { return isBusy; }
-            set { SetProperty(ref isBusy, value); }
-        }
-
-        string title = string.Empty;
-        public string Title
-        {
-            get { return title; }
-            set { SetProperty(ref title, value); }
-        }
-
-        protected bool SetProperty<T>(ref T backingStore, T value,
-            [CallerMemberName] string propertyName = "",
-            Action onChanged = null)
-        {
-            if (EqualityComparer<T>.Default.Equals(backingStore, value))
-                return false;
-
-            backingStore = value;
-            onChanged?.Invoke();
-            OnPropertyChanged(propertyName);
-            return true;
-        }
-
-        #region INotifyPropertyChanged
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            var changed = PropertyChanged;
-            if (changed == null)
-                return;
-
-            changed.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
+       
     }
 }

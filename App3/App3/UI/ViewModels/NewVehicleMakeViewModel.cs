@@ -1,5 +1,6 @@
 ﻿using App3.Models;
 using App3.Services;
+using App3.UI.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,9 +11,11 @@ using Xamarin.Forms;
 
 namespace App3.ViewModels
 {
-    public class NewVehicleMakeViewModel : INotifyPropertyChanged
+    public class NewVehicleMakeViewModel : BaseViewModel
     {
-        public IDataStore<VehicleMake> BaseVehicleMakeDataStore => DependencyService.Get<IDataStore<VehicleMake>>();
+
+        public Command SaveCommand { get; }
+        public Command CancelCommand { get; }
         public VehicleMakeService VehicleMakeService { get; set; }
 
         private string name;
@@ -24,7 +27,7 @@ namespace App3.ViewModels
             CancelCommand = new Command(OnCancel);
             this.PropertyChanged +=
                 (_, __) => SaveCommand.ChangeCanExecute();
-            VehicleMakeService = new VehicleMakeService(BaseVehicleMakeDataStore);
+            VehicleMakeService = new VehicleMakeService();
         }
 
         private bool ValidateSave()
@@ -44,9 +47,6 @@ namespace App3.ViewModels
             get => abbreviation;
             set => SetProperty(ref abbreviation, value);
         }
-
-        public Command SaveCommand { get; }
-        public Command CancelCommand { get; }
 
         private async void OnCancel()
         {
@@ -68,43 +68,5 @@ namespace App3.ViewModels
             // This will pop the current page off the navigation stack
             await Shell.Current.GoToAsync("..");
         }
-        bool isBusy = false;
-        public bool IsBusy
-        {
-            get { return isBusy; }
-            set { SetProperty(ref isBusy, value); }
-        }
-
-        string title = string.Empty;
-        public string Title
-        {
-            get { return title; }
-            set { SetProperty(ref title, value); }
-        }
-
-        protected bool SetProperty<T>(ref T backingStore, T value,
-            [CallerMemberName] string propertyName = "",
-            Action onChanged = null)
-        {
-            if (EqualityComparer<T>.Default.Equals(backingStore, value))
-                return false;
-
-            backingStore = value;
-            onChanged?.Invoke();
-            OnPropertyChanged(propertyName);
-            return true;
-        }
-
-        #region INotifyPropertyChanged
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            var changed = PropertyChanged;
-            if (changed == null)
-                return;
-
-            changed.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
     }
 }

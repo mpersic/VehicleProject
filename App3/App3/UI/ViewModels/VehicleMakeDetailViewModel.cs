@@ -16,7 +16,7 @@ using Xamarin.Forms.Internals;
 namespace App3.ViewModels
 {
     [QueryProperty(nameof(ItemId), nameof(ItemId))]
-    public class VehicleMakeDetailViewModel : INotifyPropertyChanged
+    public class VehicleMakeDetailViewModel : BaseViewModel
     {
         public Command LoadVehicleModelsCommand { get; }
         public Command AddVehicleModelCommand { get; }
@@ -24,8 +24,6 @@ namespace App3.ViewModels
         public Command DeleteVehicleMakeCommand { get; }
         public Command UpdateVehicleMakeCommand { get; }
         public Command SortVehicleModelCommand { get; }
-        public IDataStore<VehicleMake> BaseVehicleMakeDataStore => DependencyService.Get<IDataStore<VehicleMake>>();
-        public IDataStore<VehicleModel> BaseVehicleModelDataStore => DependencyService.Get<IDataStore<VehicleModel>>();
         public ObservableRangeCollection<VehicleModel> VehicleModels { get; }
         public ObservableRangeCollection<VehicleModel> AllItems { get; set; }
         public ObservableRangeCollection<string> FilterOptions { get; }
@@ -57,8 +55,8 @@ namespace App3.ViewModels
                 "A7",
                 "X5"
             };
-            VehicleMakeService = new VehicleMakeService(BaseVehicleMakeDataStore);
-            VehicleModelService = new VehicleModelService(BaseVehicleModelDataStore);
+            VehicleMakeService = new VehicleMakeService();
+            VehicleModelService = new VehicleModelService();
         }
 
         private void SortItems()
@@ -210,7 +208,7 @@ namespace App3.ViewModels
         {
             try
             {
-                var item = await BaseVehicleMakeDataStore.GetItemAsync(itemId);
+                var item = await VehicleMakeService.GetItemAsync(itemId);
                 Id = item.Id;
                 VehicleMakeName = item.Name;
                 VehicleMakeAbrv = item.Abrv;
@@ -220,43 +218,6 @@ namespace App3.ViewModels
                 Debug.WriteLine("Failed to Load Item");
             }
         }
-        bool isBusy = false;
-        public bool IsBusy
-        {
-            get { return isBusy; }
-            set { SetProperty(ref isBusy, value); }
-        }
-
-        string title = string.Empty;
-        public string Title
-        {
-            get { return title; }
-            set { SetProperty(ref title, value); }
-        }
-
-        protected bool SetProperty<T>(ref T backingStore, T value,
-            [CallerMemberName] string propertyName = "",
-            Action onChanged = null)
-        {
-            if (EqualityComparer<T>.Default.Equals(backingStore, value))
-                return false;
-
-            backingStore = value;
-            onChanged?.Invoke();
-            OnPropertyChanged(propertyName);
-            return true;
-        }
-
-        #region INotifyPropertyChanged
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            var changed = PropertyChanged;
-            if (changed == null)
-                return;
-
-            changed.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
+       
     }
 }
