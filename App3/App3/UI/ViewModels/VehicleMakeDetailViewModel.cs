@@ -37,7 +37,7 @@ namespace App3.ViewModels
         private string vehicleMakeName;
         private string vehicleMakeAbrv;
 
-        public VehicleMakeDetailViewModel()
+        public VehicleMakeDetailViewModel(VehicleMakeService vehicleMakeService, VehicleModelService vehicleModelService)
         {
             Title = "Manufacturer";
             VehicleModels = new ObservableRangeCollection<VehicleModel>();
@@ -55,8 +55,8 @@ namespace App3.ViewModels
                 "A7",
                 "X5"
             };
-            VehicleMakeService = new VehicleMakeService();
-            VehicleModelService = new VehicleModelService();
+            VehicleMakeService = vehicleMakeService;
+            VehicleModelService = vehicleModelService;
         }
 
         private void SortItems()

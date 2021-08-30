@@ -1,4 +1,5 @@
 ﻿using App3.Models;
+using App3.Services;
 using App3.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,8 @@ namespace App3.Views
         public NewVehicleMakePage()
         {
             InitializeComponent();
-            BindingContext = _viewModel = new NewVehicleMakeViewModel();
+            VehicleMakeService vehicleMakeService = new VehicleMakeService();
+            BindingContext = _viewModel = new NewVehicleMakeViewModel(vehicleMakeService);
         }
     }
 }

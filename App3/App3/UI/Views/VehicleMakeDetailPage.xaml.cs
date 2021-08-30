@@ -1,4 +1,5 @@
-﻿using App3.ViewModels;
+﻿using App3.Services;
+using App3.ViewModels;
 using System.ComponentModel;
 using Xamarin.Forms;
 
@@ -10,7 +11,9 @@ namespace App3.Views
         public VehicleMakeDetailPage()
         {
             InitializeComponent();
-            BindingContext = _viewModel = new VehicleMakeDetailViewModel();
+            VehicleMakeService vehicleMakeService = new VehicleMakeService();
+            VehicleModelService vehicleModelService = new VehicleModelService();
+            BindingContext = _viewModel = new VehicleMakeDetailViewModel(vehicleMakeService, vehicleModelService);
         }
 
         protected override void OnAppearing()

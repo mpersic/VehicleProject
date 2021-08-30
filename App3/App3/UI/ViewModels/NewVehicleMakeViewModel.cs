@@ -21,13 +21,13 @@ namespace App3.ViewModels
         private string name;
         private string abbreviation;
 
-        public NewVehicleMakeViewModel()
+        public NewVehicleMakeViewModel(VehicleMakeService vehicleMakeService)
         {
             SaveCommand = new Command(OnSave, ValidateSave);
             CancelCommand = new Command(OnCancel);
             this.PropertyChanged +=
                 (_, __) => SaveCommand.ChangeCanExecute();
-            VehicleMakeService = new VehicleMakeService();
+            VehicleMakeService = vehicleMakeService;
         }
 
         private bool ValidateSave()

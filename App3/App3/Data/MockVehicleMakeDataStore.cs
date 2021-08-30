@@ -13,18 +13,13 @@ namespace App3.Services
 
         public MockVehicleMakeDataStore()
         {
-            var container = DIVehicleMakeContainer.Configure();
-
-            var vehicleMakeService = container.Resolve<VehicleMakeService>();
-
             items = new List<VehicleMake>()
             {
                 new VehicleMake { Id = "1", Name = "Bayerische Motoren Werke", Abrv="BMW" },
                 new VehicleMake { Id = "2", Name = "Auto Union Deutschland Ingolstadt", Abrv="AUDI" },
                 new VehicleMake { Id = "3", Name = "PORSCHE", Abrv="PORSCHE" },
-                new VehicleMake { Id = "4", Name = "FJORD", Abrv="FORD" },
+                new VehicleMake { Id = "4", Name = "FORD", Abrv="FORD" },
             };
-            vehicleMakeService.ChangeName(items.ElementAt(3), "FORD");
         }
 
         public async Task<bool> AddItemAsync(VehicleMake item)
@@ -40,7 +35,7 @@ namespace App3.Services
             int oldIndex = items.IndexOf(oldItem);
             items.Remove(oldItem);
             items.Insert(oldIndex, item);
-          
+
             return await Task.FromResult(true);
         }
 

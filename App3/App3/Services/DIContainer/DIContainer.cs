@@ -7,23 +7,24 @@ using System.Text;
 
 namespace App3.DIContainer
 {
-    public class DIVehicleMakeContainer
+    public class DIContainer
     {
         private static IContainer instance;
         public static IContainer Instance {
             get {
                     if (instance == null)
                     {
-                        instance = Configure();
+                        instance = Resolve();
                     }
                         return instance;
-                }
-            set => Configure(); } 
+                } 
+        } 
 
-        public static IContainer Configure()
+        public static IContainer Resolve()
         {
                 var builder = new ContainerBuilder();
                 builder.RegisterModule<VehicleMakeProgramModule>();
+                builder.RegisterModule<VehicleModelProgramModule>();
                 builder.RegisterSource(new AnyConcreteTypeNotAlreadyRegisteredSource());
                 return builder.Build();
         }

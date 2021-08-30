@@ -13,17 +13,13 @@ namespace App3.Services
     public class MockVehicleModelDataStore : IDataStore<VehicleModel>
     {
         readonly List<VehicleModel> items;
-        public MockVehicleModelDataStore()
+        public MockVehicleModelDataStore(MockVehicleMakeDataStore mockVehicleMakeDataStore, IMapper mapper)
         {
-            var container = DIVehicleModelContainer.Configure();
+
+            var container = DIContainer.DIContainer.Resolve();
             var notificationService = container.Resolve<IInfo>();
             var vehicleModelService = container.Resolve<VehicleModelService>();
 
-            var configuration = new MapperConfiguration(cfg =>
-            cfg.AddProfile<NewVehicleModelProfile>()); ;
-            var mapper = configuration.CreateMapper();
-
-            MockVehicleMakeDataStore mockVehicleMakeDataStore = new MockVehicleMakeDataStore();
             List<VehicleMake> vehicleMakes = mockVehicleMakeDataStore.GetItems();
 
             VehicleModel x2 = mapper.Map<VehicleMake, VehicleModel>(vehicleMakes.ElementAt(0));
@@ -106,13 +102,13 @@ namespace App3.Services
 
         public async Task<bool> UpdateItemsAsync(string abbreviation, string ID)
         {
-            foreach(var vehicle in items)
+            foreach (var vehicle in items)
             {
                 if (ID == vehicle.MakeId)
                     vehicle.Abrv = abbreviation;
             }
             MockVehicleMakeDataStore mockVehicleMakeDataStore = new MockVehicleMakeDataStore();
-            await  mockVehicleMakeDataStore.UpdateItemAbbrAsync(abbreviation,ID);
+            await mockVehicleMakeDataStore.UpdateItemAbbrAsync(abbreviation, ID);
             return await Task.FromResult(true);
         }
     }

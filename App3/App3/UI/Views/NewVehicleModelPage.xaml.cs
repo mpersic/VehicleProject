@@ -1,5 +1,7 @@
 ﻿using App3.Models;
+using App3.Services;
 using App3.ViewModels;
+using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +21,13 @@ namespace App3.Views
         public NewVehicleModelPage()
         {
             InitializeComponent();
-            BindingContext = _viewModel = new NewVehicleModelViewModel();
+
+            VehicleMakeService vehicleMakeService = new VehicleMakeService();
+            VehicleModelService vehicleModelService = new VehicleModelService();
+            var configuration = new MapperConfiguration(cfg =>
+            cfg.AddProfile<NewVehicleModelProfile>());
+            var mapper = configuration.CreateMapper();
+            BindingContext = _viewModel = new NewVehicleModelViewModel(vehicleMakeService, vehicleModelService, mapper);
         }
     }
 }

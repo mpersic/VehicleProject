@@ -17,12 +17,12 @@ namespace App3.ViewModels
         public Command DeleteVehicleModelCommand { get; }
         public Command UpdateVehicleModelCommand { get; }
         public VehicleModelService VehicleModelService { get; set; }
-        public VehicleModelDetailViewModel()
+        public VehicleModelDetailViewModel(VehicleModelService vehicleModelService)
         {
             Title = "Model";
             UpdateVehicleModelCommand = new Command(UpdateItem);
             DeleteVehicleModelCommand = new Command(DeleteItem);
-            VehicleModelService = new VehicleModelService();
+            VehicleModelService = vehicleModelService;
         }
 
         private async void DeleteItem(object obj)

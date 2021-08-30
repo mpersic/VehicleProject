@@ -26,14 +26,13 @@ namespace App3.ViewModels
         public ObservableRangeCollection<VehicleMake> Items { get; set; }
         public ObservableRangeCollection<VehicleMake> AllItems { get; set; }
         public VehicleMakeService VehicleMakeService { get; set; }
-        public VehicleModelService VehicleModelService { get; set; }
 
 
         private VehicleMake _selectedItem;
         private string selectedFilter = "All";
         private string orderState = "Descending";
 
-        public VehicleMakesViewModel()
+        public VehicleMakesViewModel(VehicleMakeService vehicleMakeService)
         {
             Title = "Manufacturers";
             Items = new ObservableRangeCollection<VehicleMake>();
@@ -48,7 +47,7 @@ namespace App3.ViewModels
                     "AUDI",
                     "All"
                 };
-            VehicleMakeService = new VehicleMakeService();
+            VehicleMakeService = vehicleMakeService;
         }
         public string SelectedFilter
         {

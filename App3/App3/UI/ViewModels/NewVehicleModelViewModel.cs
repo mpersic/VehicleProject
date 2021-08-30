@@ -25,7 +25,7 @@ namespace App3.ViewModels
         private string name;
         private string itemId;
 
-        public NewVehicleModelViewModel()
+        public NewVehicleModelViewModel(VehicleMakeService vehicleMakeService, VehicleModelService vehicleModelService, IMapper mapper)
         {
             SaveCommand = new Command(OnSave, ValidateSave);
             CancelCommand = new Command(OnCancel);
@@ -34,12 +34,10 @@ namespace App3.ViewModels
             Name = name;
             ItemId = itemId;
 
-            VehicleMakeService = new VehicleMakeService();
-            VehicleModelService = new VehicleModelService();
+            VehicleMakeService = vehicleMakeService;
+            VehicleModelService = vehicleModelService;
 
-            var configuration = new MapperConfiguration(cfg =>
-            cfg.AddProfile<NewVehicleModelProfile>());
-            mapper = configuration.CreateMapper();
+            this.mapper = mapper;
         }
 
         private bool ValidateSave()

@@ -1,5 +1,9 @@
-﻿using App3.Services;
+﻿using App3.DIContainer;
+using App3.Models;
+using App3.Services;
 using App3.Views;
+using Autofac;
+using AutoMapper;
 using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -12,8 +16,18 @@ namespace App3
         public App()
         {
             InitializeComponent();
+
             DependencyService.Register<MockVehicleMakeDataStore>();
-            DependencyService.Register<MockVehicleModelDataStore>();
+
+            MockVehicleMakeDataStore mockVehicleMakeDataStore = new MockVehicleMakeDataStore();
+
+            var configuration = new MapperConfiguration(cfg =>
+            cfg.AddProfile<NewVehicleModelProfile>()); ;
+            var mapper = configuration.CreateMapper();
+
+
+            MockVehicleModelDataStore mockVehicleModelDataStore = new MockVehicleModelDataStore(mockVehicleMakeDataStore, mapper);
+            DependencyService.RegisterSingleton<IDataStore<VehicleModel>>(mockVehicleModelDataStore);
             MainPage = new AppShell();
         }
 
