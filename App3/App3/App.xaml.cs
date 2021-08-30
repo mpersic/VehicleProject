@@ -21,12 +21,8 @@ namespace App3
 
             MockVehicleMakeDataStore mockVehicleMakeDataStore = new MockVehicleMakeDataStore();
 
-            var configuration = new MapperConfiguration(cfg =>
-            cfg.AddProfile<NewVehicleModelProfile>()); ;
-            var mapper = configuration.CreateMapper();
-
-
-            MockVehicleModelDataStore mockVehicleModelDataStore = new MockVehicleModelDataStore(mockVehicleMakeDataStore, mapper);
+            var container = DIContainer.DIContainer.Instance;
+            MockVehicleModelDataStore mockVehicleModelDataStore = new MockVehicleModelDataStore(mockVehicleMakeDataStore, container);
             DependencyService.RegisterSingleton<IDataStore<VehicleModel>>(mockVehicleModelDataStore);
             MainPage = new AppShell();
         }

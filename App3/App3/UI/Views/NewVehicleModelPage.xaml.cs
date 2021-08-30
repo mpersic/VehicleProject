@@ -4,11 +4,13 @@ using App3.ViewModels;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 using Xamarin.Forms.Xaml;
 
 namespace App3.Views
@@ -24,10 +26,9 @@ namespace App3.Views
 
             VehicleMakeService vehicleMakeService = new VehicleMakeService();
             VehicleModelService vehicleModelService = new VehicleModelService();
-            var configuration = new MapperConfiguration(cfg =>
-            cfg.AddProfile<NewVehicleModelProfile>());
-            var mapper = configuration.CreateMapper();
-            BindingContext = _viewModel = new NewVehicleModelViewModel(vehicleMakeService, vehicleModelService, mapper);
+
+            var container = DIContainer.DIContainer.Instance;
+            BindingContext = _viewModel = new NewVehicleModelViewModel(vehicleMakeService, vehicleModelService, container);
         }
     }
 }

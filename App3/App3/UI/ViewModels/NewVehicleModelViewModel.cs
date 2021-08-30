@@ -1,6 +1,7 @@
 ﻿using App3.Models;
 using App3.Services;
 using App3.UI.ViewModels;
+using Autofac;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace App3.ViewModels
         private string name;
         private string itemId;
 
-        public NewVehicleModelViewModel(VehicleMakeService vehicleMakeService, VehicleModelService vehicleModelService, IMapper mapper)
+        public NewVehicleModelViewModel(VehicleMakeService vehicleMakeService, VehicleModelService vehicleModelService, Autofac.IContainer container)
         {
             SaveCommand = new Command(OnSave, ValidateSave);
             CancelCommand = new Command(OnCancel);
@@ -34,10 +35,9 @@ namespace App3.ViewModels
             Name = name;
             ItemId = itemId;
 
+            mapper = container.Resolve<IMapper>();
             VehicleMakeService = vehicleMakeService;
             VehicleModelService = vehicleModelService;
-
-            this.mapper = mapper;
         }
 
         private bool ValidateSave()

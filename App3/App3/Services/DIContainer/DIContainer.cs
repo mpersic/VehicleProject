@@ -1,9 +1,7 @@
 ﻿using App3.Services;
 using Autofac;
 using Autofac.Features.ResolveAnything;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using AutoMapper;
 
 namespace App3.DIContainer
 {
@@ -14,19 +12,34 @@ namespace App3.DIContainer
             get {
                     if (instance == null)
                     {
-                        instance = Resolve();
+                        instance = Configure();
                     }
                         return instance;
                 } 
-        } 
+        }
 
-        public static IContainer Resolve()
+        private static IContainer Configure()
         {
-                var builder = new ContainerBuilder();
-                builder.RegisterModule<VehicleMakeProgramModule>();
-                builder.RegisterModule<VehicleModelProgramModule>();
-                builder.RegisterSource(new AnyConcreteTypeNotAlreadyRegisteredSource());
-                return builder.Build();
+            var builder = new ContainerBuilder();
+            builder.RegisterModule<VehicleMakeProgramModule>();
+            builder.RegisterModule<VehicleModelProgramModule>();
+            builder.RegisterSource(new AnyConcreteTypeNotAlreadyRegisteredSource());
+
+            builder.Register(context => new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<NewVehicleModelProfile>();
+            }
+            )).AsSelf().SingleInstance();
+
+            builder.Register(c =>
+            {
+                var context = c.Resolve<IComponentContext>();
+                var config = context.Resolve<MapperConfiguration>();
+                return config.CreateMapper(context.Resolve);
+            })
+            .As<IMapper>()
+            .InstancePerLifetimeScope();
+            return builder.Build();
         }
     }
 }

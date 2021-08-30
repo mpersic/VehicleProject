@@ -13,12 +13,12 @@ namespace App3.Services
     public class MockVehicleModelDataStore : IDataStore<VehicleModel>
     {
         readonly List<VehicleModel> items;
-        public MockVehicleModelDataStore(MockVehicleMakeDataStore mockVehicleMakeDataStore, IMapper mapper)
+        public MockVehicleModelDataStore(MockVehicleMakeDataStore mockVehicleMakeDataStore, IContainer container)
         {
 
-            var container = DIContainer.DIContainer.Resolve();
             var notificationService = container.Resolve<IInfo>();
             var vehicleModelService = container.Resolve<VehicleModelService>();
+            var mapper = container.Resolve<IMapper>();
 
             List<VehicleMake> vehicleMakes = mockVehicleMakeDataStore.GetItems();
 
