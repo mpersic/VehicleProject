@@ -21,6 +21,7 @@ namespace App3.ViewModels
         public Command LoadVehicleModelsCommand { get; }
         public Command AddVehicleModelCommand { get; }
         public Command<VehicleModel> VehicleModelTapped { get; }
+        public Command<VehicleModel> VehicleModelSwiped { get; }
         public Command DeleteVehicleMakeCommand { get; }
         public Command UpdateVehicleMakeCommand { get; }
         public Command SortVehicleModelCommand { get; }
@@ -44,6 +45,7 @@ namespace App3.ViewModels
             AllItems = new ObservableRangeCollection<VehicleModel>();
             LoadVehicleModelsCommand = new Command(async () => await ExecuteLoadItemsCommand());
             VehicleModelTapped = new Command<VehicleModel>(OnVehicleModelSelected);
+            VehicleModelSwiped = new Command<VehicleModel>(OnVehicleModelSwiped);
             AddVehicleModelCommand = new Command(OnAddItem);
             UpdateVehicleMakeCommand = new Command(UpdateItem);
             DeleteVehicleMakeCommand = new Command(DeleteItem);
@@ -119,8 +121,16 @@ namespace App3.ViewModels
             if (item == null)
                 return;
 
-            // This will push the ItemDetailPage onto the navigation stack
             await Shell.Current.GoToAsync($"{nameof(VehicleModelDetailPage)}?{nameof(VehicleModelDetailViewModel.ItemId)}={item.Id}");
+        }
+
+        async void OnVehicleModelSwiped(VehicleModel item)
+        {
+            if (item == null)
+                return;
+
+            await VehicleModelService.DeleteItemAsync(item.Id);
+            await ExecuteLoadItemsCommand();
         }
 
         private async void DeleteItem(object obj)
