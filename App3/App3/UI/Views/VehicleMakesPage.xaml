@@ -24,23 +24,36 @@
                 SelectionMode="None">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <StackLayout  Spacing="20" Padding="10" x:DataType="model:VehicleMake"
-                                 BackgroundColor="Beige">
-                            <Label Text="{Binding Name}" 
+                        <StackLayout Orientation="Horizontal" BackgroundColor="Beige" x:DataType="model:VehicleMake">
+                            <Image HeightRequest="100" WidthRequest="100" Margin="10" >
+                                <Image.Source>
+                                    <FileImageSource File="{Binding Abrv, StringFormat='{0}.png'}"/>
+                                </Image.Source>
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer 
+                                        NumberOfTapsRequired="1"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type local:VehicleMakesViewModel}}, Path=AlertItemTapped}"		
+                                        CommandParameter="{Binding .}">
+                                    </TapGestureRecognizer>
+                                </Image.GestureRecognizers>
+                            </Image> 
+                            <StackLayout  Spacing="20" Padding="10" x:DataType="model:VehicleMake" BackgroundColor="Beige">
+                                <Label Text="{Binding Name}" 
                             LineBreakMode="NoWrap" 
                             Style="{DynamicResource ListItemTextStyle}" 
                             FontSize="16" />
-                            <Label Text="{Binding Abrv}" 
+                                <Label Text="{Binding Abrv}" 
                             LineBreakMode="NoWrap"
                             Style="{DynamicResource ListItemDetailTextStyle}"
                             FontSize="13" />
-                            <StackLayout.GestureRecognizers>
-                                <TapGestureRecognizer 
+                                <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer 
                                 NumberOfTapsRequired="1"
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type local:VehicleMakesViewModel}}, Path=ItemTapped}"		
                                 CommandParameter="{Binding .}">
-                                </TapGestureRecognizer>
-                            </StackLayout.GestureRecognizers>
+                                    </TapGestureRecognizer>
+                                </StackLayout.GestureRecognizers>
+                            </StackLayout>
                         </StackLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

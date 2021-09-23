@@ -20,6 +20,7 @@ namespace App3.ViewModels
         public Command LoadItemsCommand { get; }
         public Command AddItemCommand { get; }
         public Command<VehicleMake> ItemTapped { get; }
+        public Command<VehicleMake> AlertItemTapped { get; }
         public Command FilterVehicleMakersCommand { get; }
         public Command SortCommand { get; }
         public ObservableCollection<string> FilterOptions { get; }
@@ -39,6 +40,7 @@ namespace App3.ViewModels
             AllItems = new ObservableRangeCollection<VehicleMake>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
             ItemTapped = new Command<VehicleMake>(OnItemSelected);
+            AlertItemTapped = new Command<VehicleMake>(OnItemSelectedAlert);
             AddItemCommand = new Command(OnAddItem);
             SortCommand = new Command(SortItems);
             FilterOptions = new ObservableCollection<string>
@@ -126,8 +128,17 @@ namespace App3.ViewModels
             if (item == null)
                 return;
 
-            // This will push the ItemDetailPage onto the navigation stack
             await Shell.Current.GoToAsync($"{nameof(VehicleMakeDetailPage)}?{nameof(VehicleMakeDetailViewModel.ItemId)}={item.Id}");
         }
+
+        async void OnItemSelectedAlert(VehicleMake item)
+        {
+            if (item == null)
+                return;
+            await Shell.Current.DisplayAlert(item.Abrv, "You pressed the logo of " + item.Name, "Awesome!");
+            Image image = new Image();
+            image.Source = item.Abrv + ".png";
+        }
+
     }
 }
