@@ -15,25 +15,25 @@ namespace App3.Services
         {
             vehicleMake.Name = newName;
         }
-        public async Task<IEnumerable<VehicleMake>> GetItemsAsync(bool forceRefresh = false)
+        public Task<IEnumerable<VehicleMake>> GetItemsAsync(bool forceRefresh = false)
         {
-            return await Task.FromResult(dataStore.GetItemsAsync(forceRefresh)).Unwrap();
+            return dataStore.GetItemsAsync(forceRefresh);
         }
-        public async Task<VehicleMake> GetItemAsync(string id)
+        public Task<VehicleMake> GetItemAsync(string id)
         {
-            return await Task.FromResult(dataStore.GetItemAsync(id)).Unwrap();
+            return dataStore.GetItemAsync(id);
         }
-        public async Task<bool> DeleteItemAsync(string id)
+        public Task<bool> DeleteItemAsync(string id)
         {
-            return await Task.FromResult(dataStore.DeleteItemAsync(id)).Unwrap();
+            return dataStore.DeleteItemAsync(id);
         }
-        public async Task<bool> UpdateItemAsync(VehicleMake item)
+        public Task<bool> UpdateItemAsync(VehicleMake item)
         {
-            return await Task.FromResult(dataStore.UpdateItemAsync(item)).Unwrap();
+            return dataStore.UpdateItemAsync(item);
         }
-        public async Task<bool> AddItemAsync(VehicleMake item)
+        public Task<bool> AddItemAsync(VehicleMake item)
         {
-            return await Task.FromResult(dataStore.AddItemAsync(item)).Unwrap();
+            return dataStore.AddItemAsync(item);
         }
     }
 }

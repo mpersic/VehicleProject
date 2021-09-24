@@ -16,26 +16,26 @@ namespace App3.Services
             vehicleModel.Name = newName;
         }
 
-        public async Task<IEnumerable<VehicleModel>> GetItemsAsync(bool forceRefresh = false)
+        public Task<IEnumerable<VehicleModel>> GetItemsAsync(bool forceRefresh = false)
         {
-            return await Task.FromResult(dataStore.GetItemsAsync(forceRefresh)).Unwrap();
+            return dataStore.GetItemsAsync(forceRefresh);
         }
 
-        public async Task<bool> DeleteItemAsync(string id)
+        public Task<bool> DeleteItemAsync(string id)
         {
-            return await Task.FromResult(dataStore.DeleteItemAsync(id)).Unwrap();
+            return dataStore.DeleteItemAsync(id);
         }
-        public async Task<bool> UpdateItemAsync(VehicleModel item)
+        public Task<bool> UpdateItemAsync(VehicleModel item)
         {
-            return await Task.FromResult(dataStore.UpdateItemAsync(item)).Unwrap();
+            return dataStore.UpdateItemAsync(item);
         }
-        public async Task<VehicleModel> GetItemAsync(string id)
+        public Task<VehicleModel> GetItemAsync(string id)
         {
-            return await Task.FromResult(dataStore.GetItemAsync(id)).Unwrap();
+            return dataStore.GetItemAsync(id);
         }
-        public async Task<bool> AddItemAsync(VehicleModel item)
+        public Task<bool> AddItemAsync(VehicleModel item)
         {
-            return await Task.FromResult(dataStore.AddItemAsync(item)).Unwrap();
+            return dataStore.AddItemAsync(item);
         }
     }
 }
