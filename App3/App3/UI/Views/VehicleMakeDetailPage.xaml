@@ -27,7 +27,7 @@
         <RefreshView x:DataType="local:VehicleMakeDetailViewModel" Command="{Binding LoadVehicleModelsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
             <CollectionView x:Name="VehicleModels"
                 ItemsSource="{Binding VehicleModels}"
-                SelectionMode="None">
+                SelectionMode="None" EmptyView="No items to display">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <SwipeView x:DataType="model:VehicleModel">
