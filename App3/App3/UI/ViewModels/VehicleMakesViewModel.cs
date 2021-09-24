@@ -136,8 +136,6 @@ namespace App3.ViewModels
             if (item == null)
                 return;
             await Shell.Current.DisplayAlert(item.Abrv, "You pressed the logo of " + item.Name, "Awesome!");
-            Image image = new Image();
-            image.Source = item.Abrv + ".png";
         }
 
     }
